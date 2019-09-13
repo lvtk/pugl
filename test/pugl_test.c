@@ -202,13 +202,14 @@ onParentEvent(PuglView* view, const PuglEvent* event)
 	printEvent(event, "Parent: ");
 
 	switch (event->type) {
-	case PUGL_CONFIGURE:
-		onReshape(view,
-		          (int)event->configure.width,
-		          (int)event->configure.height);
+	case PUGL_CONFIGURE: {
+		int width = event->configure.width * event->configure.scale;
+		int height = event->configure.height * event->configure.scale;
+		onReshape(view, width, height);
 
 		puglSetFrame(app->child, getChildFrame(parentFrame));
 		break;
+	}
 	case PUGL_EXPOSE:
 		if (puglHasFocus(app->parent)) {
 			glMatrixMode(GL_MODELVIEW);
@@ -250,9 +251,11 @@ onEvent(PuglView* view, const PuglEvent* event)
 	printEvent(event, "Child: ");
 
 	switch (event->type) {
-	case PUGL_CONFIGURE:
-		onReshape(view, (int)event->configure.width, (int)event->configure.height);
-		break;
+	case PUGL_CONFIGURE: {
+		int width = event->configure.width * event->configure.scale;
+		int height = event->configure.height * event->configure.scale;
+		onReshape(view, width, height);
+	} break;
 	case PUGL_EXPOSE:
 		onDisplay(view);
 		break;

@@ -107,18 +107,21 @@ updateViewRect(PuglView* view)
 	if (reshaped) {
 		updateViewRect(puglview);
 
-		const PuglEventConfigure ev =  {
+		const NSRect br = [puglview->impl->drawView convertRectToBacking:rect];
+		const PuglEventConfigure ev = {
 			PUGL_CONFIGURE,
 			0,
 			puglview->frame.x,
 			puglview->frame.y,
 			puglview->frame.width,
 			puglview->frame.height,
+			br.size.width / rect.size.width
 		};
 
 		puglDispatchEvent(puglview, (const PuglEvent*)&ev);
 		reshaped = false;
 	}
+
 
 	const PuglEventExpose ev = {
 		PUGL_EXPOSE,
